@@ -732,14 +732,9 @@ class alignas(kValueVariantAlign) CEL_COMMON_INTERNAL_VALUE_VARIANT_TRIVIAL_ABI
       const bool rhs_trivial =
           (rhs.flags_ & ValueFlags::kNonTrivial) == ValueFlags::kNone;
       if (lhs_trivial && rhs_trivial) {
-        alignas(ValueVariant) std::byte tmp[sizeof(ValueVariant)];
-        // NOLINTNEXTLINE(bugprone-undefined-memory-manipulation)
-        std::memcpy(tmp, std::addressof(lhs), sizeof(ValueVariant));
-        // NOLINTNEXTLINE(bugprone-undefined-memory-manipulation)
-        std::memcpy(std::addressof(lhs), std::addressof(rhs),
-                    sizeof(ValueVariant));
-        // NOLINTNEXTLINE(bugprone-undefined-memory-manipulation)
-        std::memcpy(std::addressof(rhs), tmp, sizeof(ValueVariant));
+        ValueVariant tmp = lhs;
+        lhs = rhs;
+        rhs = std::move(tmp);
       } else {
         SlowSwap(lhs, rhs, lhs_trivial, rhs_trivial);
       }

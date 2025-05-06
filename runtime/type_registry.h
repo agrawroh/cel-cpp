@@ -77,8 +77,8 @@ class TypeRegistry {
   // Move-only
   TypeRegistry(const TypeRegistry& other) = delete;
   TypeRegistry& operator=(TypeRegistry& other) = delete;
-  TypeRegistry(TypeRegistry&& other) = default;
-  TypeRegistry& operator=(TypeRegistry&& other) = default;
+  TypeRegistry(TypeRegistry&& other) = delete;
+  TypeRegistry& operator=(TypeRegistry&& other) = delete;
 
   // Registers a type such that it can be accessed by name, i.e. `type(foo) ==
   // my_type`. Where `my_type` is the type being registered.

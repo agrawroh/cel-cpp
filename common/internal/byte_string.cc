@@ -104,16 +104,14 @@ ByteString ByteString::Concat(const ByteString& lhs, const ByteString& rhs,
 
 ByteString::ByteString(Allocator<> allocator, absl::string_view string) {
   ABSL_DCHECK_LE(string.size(), max_size());
-  auto* arena = allocator.arena();
-  if (string.size() <= kSmallByteStringCapacity) {
-    SetSmall(arena, string);
-  } else {
-    SetMedium(arena, string);
+  
+  // Check for null data pointer in the string_view
+  if (string.data() == nullptr) {
+    // Handle null data - create an empty ByteString
+    SetSmallEmpty(allocator.arena());
+    return;
   }
-}
 
-ByteString::ByteString(Allocator<> allocator, const std::string& string) {
-  ABSL_DCHECK_LE(string.size(), max_size());
   auto* arena = allocator.arena();
   if (string.size() <= kSmallByteStringCapacity) {
     SetSmall(arena, string);
